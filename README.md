@@ -1,1 +1,1 @@
-[Link Text](https://paas-project.onrender.com/){:target="_blank"}
+[Project URL](https://paas-project.onrender.com/)
