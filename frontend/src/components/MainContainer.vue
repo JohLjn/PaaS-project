@@ -20,6 +20,10 @@ export default {
         <label for="age">Ålder *</label>
         <input v-model="age" type="number" id="age" />
       </div>
+      <div class="align-info">
+        <label for="password">Lösenord * (Du kommer förstå varför)</label>
+        <input v-model="password" type="text" id="password" />
+      </div>
     </div>
     <textarea
       v-model="text"
@@ -51,6 +55,7 @@ export default {
     width: 50%;
     height: 20vh;
     color: #fff;
+    margin-top: 3rem;
     @include border-radius(3px);
     background: $primary-color;
     &::placeholder {
@@ -66,30 +71,31 @@ export default {
   }
   #input-info {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 30px;
-    width: 50%;
+    width: 40%;
     margin-top: 2rem;
     .align-info {
       width: 100%;
       display: flex;
       flex-direction: column;
-      label {
-        margin-bottom: 7px;
-      }
     }
     input {
-      padding: 5px 5px;
-      margin-bottom: 3rem;
+      padding: 5px 5px 5px 2px;
       border: none;
       border-bottom: 1px solid #fff;
       background: $primary-color;
-      font-size: 1.2rem;
+      font-size: 1rem;
       color: #fff;
       &:focus {
         outline: none;
       }
     }
+  }
+  label {
+    margin-bottom: 7px;
+    font-weight: 600;
   }
 }
 </style>
