@@ -1,48 +1,79 @@
 <script>
+import PoemContainer from "../components/PoemContainer.vue";
 export default {
+  components: {
+    PoemContainer,
+  },
   data() {
     return {
-      count: 0,
+      name: null,
+      age: null,
+      password: null,
+      poemtext: null,
     };
+  },
+  methods: {
+    applyPoem() {
+      fetch("/api", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: this.name,
+          age: this.age,
+          password: this.password,
+          poemtext: this.poemtext,
+        }),
+      }).catch((error) => {
+        console.error("Error:", error);
+      });
+    },
   },
 };
 </script>
 
 <template>
-  <div id="main-container">
-    <h2>Framhäv din kreativa <span>diktkunskap!</span></h2>
-    <div id="input-info">
-      <div class="align-info">
-        <label for="name">Namn *</label>
-        <input v-model="name" type="text" id="name" />
+  <div class="main-container">
+    <div id="form-container">
+      <h2>Framhäv din kreativa <span>diktkunskap!</span></h2>
+      <div id="input-info">
+        <div class="align-info">
+          <label for="name">Namn *</label>
+          <input v-model="name" type="text" id="name" />
+        </div>
+        <div class="align-info">
+          <label for="age">Ålder *</label>
+          <input v-model="age" type="number" id="age" />
+        </div>
+        <div class="align-info">
+          <label for="password">Lösenord * (Du kommer förstå varför)</label>
+          <input v-model="password" type="text" id="password" />
+        </div>
       </div>
-      <div class="align-info">
-        <label for="age">Ålder *</label>
-        <input v-model="age" type="number" id="age" />
-      </div>
-      <div class="align-info">
-        <label for="password">Lösenord * (Du kommer förstå varför)</label>
-        <input v-model="password" type="text" id="password" />
-      </div>
+      <textarea
+        v-model="poemtext"
+        placeholder="Gud som haver programmerare kärt..."
+      ></textarea>
+      <button @click="applyPoem">Skicka!</button>
     </div>
-    <textarea
-      v-model="text"
-      placeholder="Gud som haver programmerare kärt..."
-    ></textarea>
-    <button>Skicka!</button>
+    <PoemContainer />
   </div>
 </template>
 
 <style scoped lang="scss">
 @import "../style.scss";
 
-#main-container {
+.main-container {
   width: 70%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 50px;
-  border-bottom: 1px solid #fff;
+  margin-top: 10rem;
+  #form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px;
+    border-bottom: 1px solid #fff;
+  }
   h2 {
     font-size: 3rem;
     span {
