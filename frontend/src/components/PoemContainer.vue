@@ -33,7 +33,7 @@ export default {
     removePoem(id, password) {
       if (this.userPassword !== password) {
         this.userPassword = window.prompt(
-          "Ange lösenord vid skapelse av dikten för att redigera:"
+          "Ange lösenord vid skapelse av dikten för att radera:"
         );
       }
       if (this.userPassword === password) {

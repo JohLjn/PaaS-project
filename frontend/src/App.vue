@@ -1,23 +1,32 @@
 <script>
 import IntroContainer from "./components/IntroContainer.vue";
 import MainContainer from "./components/MainContainer.vue";
+import ForLulz from "./components/ForLulz.vue";
 
 export default {
   data() {
     return {
       showIntro: true,
+      bigLaunch: true,
     };
   },
   components: {
     IntroContainer,
     MainContainer,
+    ForLulz,
+  },
+  created() {
+    setTimeout(() => {
+      this.bigLaunch = false;
+    }, 13000);
   },
 };
 </script>
 
 <template>
   <div id="container">
-    <transition name="slide-fade" mode="out-in">
+    <ForLulz v-if="bigLaunch" />
+    <transition v-else name="slide-fade" mode="out-in">
       <IntroContainer
         v-if="showIntro"
         @toggle-main="showIntro = false"
