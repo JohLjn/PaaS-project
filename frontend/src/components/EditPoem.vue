@@ -22,12 +22,13 @@ export default {
           newName: this.editName,
           newAge: this.editAge,
           newPoemtext: this.editPoemtext,
-          newDate: this.currentDate
+          newDate: this.currentDate,
         }),
       })
         .then((response) => response.json())
         .then((result) => {
           console.log(result.message);
+          this.$emit("edits-saved");
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -51,12 +52,18 @@ export default {
 
 <template>
   <div id="edit-container">
-    <label for="edit-name">Namn</label>
-    <input v-model="editName" type="text" id="edit-name" />
-    <label for="edit-age">Ålder</label>
-    <input v-model="editAge" type="number" id="edit-age" />
-    <textarea v-model="editPoemtext" placeholder="Ändra dikt..."></textarea>
-    <button @click="editPoem">Bekräfta ändringar</button>
+    <form @submit.prevent="editPoem">
+      <label for="edit-name">Namn</label>
+      <input v-model="editName" type="text" id="edit-name" required />
+      <label for="edit-age">Ålder</label>
+      <input v-model="editAge" type="number" id="edit-age" required />
+      <textarea
+        v-model="editPoemtext"
+        placeholder="Ändra dikt..."
+        required
+      ></textarea>
+      <button type="submit">Bekräfta ändringar</button>
+    </form>
   </div>
 </template>
 
@@ -74,7 +81,7 @@ export default {
   }
 }
 
-#edit-container {
+form {
   transform: translateY(-15px);
   border-top: 1px solid #fff;
   padding-top: 15px;

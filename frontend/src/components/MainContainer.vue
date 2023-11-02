@@ -11,6 +11,8 @@ export default {
       password: null,
       poemtext: null,
       publishdate: null,
+      updateKey: 1,
+      easterEgg: false,
     };
   },
   methods: {
@@ -25,11 +27,12 @@ export default {
           name: this.name,
           age: this.age,
           password: this.password,
-          poemtext: this.poemtext,
+          poemtext: `"${this.poemtext}"`,
           publishdate: this.publishdate,
         }),
-      }).catch((error) => {
-        console.error("Error:", error);
+      }).then(() => {
+        this.updateKey++;
+        this.easterEgg = true;
       });
     },
   },
@@ -52,27 +55,55 @@ export default {
   <div class="main-container">
     <div id="form-container">
       <h2>Framhäv din kreativa <span>diktkunskap!</span></h2>
-      <div id="input-info">
-        <div class="align-info">
-          <label for="name">Namn *</label>
-          <input v-model="name" type="text" id="name" />
+      <form @submit.prevent="applyPoem" v-if="!easterEgg">
+        <div id="input-info">
+          <div class="align-info">
+            <label for="name">Namn *</label>
+            <input
+              v-model="name"
+              type="text"
+              id="name"
+              required
+              placeholder="-"
+            />
+          </div>
+          <div class="align-info">
+            <label for="age">Årtal *</label>
+            <input
+              v-model="age"
+              type="number"
+              id="age"
+              required
+              placeholder="-"
+            />
+          </div>
+          <div class="align-info">
+            <label for="password">Lösenord * </label>
+            <input
+              v-model="password"
+              type="password"
+              id="password"
+              required
+              placeholder="-"
+            />
+            <span>För att kunna redigera & ta bort.</span>
+          </div>
         </div>
-        <div class="align-info">
-          <label for="age">Ålder *</label>
-          <input v-model="age" type="number" id="age" />
-        </div>
-        <div class="align-info">
-          <label for="password">Lösenord * (Du kommer förstå varför)</label>
-          <input v-model="password" type="password" id="password" />
-        </div>
+        <textarea
+          v-model="poemtext"
+          placeholder="Gud som haver programmerare kär..."
+          required
+        ></textarea>
+        <button type="submit">Skicka!</button>
+      </form>
+      <div id="form-sent" v-else>
+        <h3>Tack för ditt bidrag!</h3>
+        <p id="easter-egg">
+          ^.&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp.^<br />( @ )<br />
+        </p>
       </div>
-      <textarea
-        v-model="poemtext"
-        placeholder="Gud som haver programmerare kärt..."
-      ></textarea>
-      <button @click="applyPoem">Skicka!</button>
     </div>
-    <PoemContainer />
+    <PoemContainer :key="updateKey" />
   </div>
 </template>
 
@@ -92,17 +123,20 @@ export default {
 
 .main-container {
   width: 70%;
-  transform: translateY(10%);
-  animation: fadeIn 0.7s ease-in-out forwards;
   #form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: 50px;
     border-bottom: 1px solid #fff;
+    transform: translateY(10%);
+    animation: fadeIn 0.7s ease-in-out forwards;
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   }
   h2 {
     font-size: 3rem;
+    text-align: center;
     span {
       color: #00dc82;
     }
@@ -138,6 +172,11 @@ export default {
       width: 100%;
       display: flex;
       flex-direction: column;
+      span {
+        margin-top: 10px;
+        font-size: 11px;
+        color: #eee;
+      }
     }
     input {
       padding: 5px 5px 5px 2px;
@@ -154,6 +193,20 @@ export default {
   label {
     margin-bottom: 7px;
     font-weight: 600;
+  }
+
+  #form-sent {
+    animation: fadeIn 0.7s ease-in-out forwards;
+    margin-top: 5.5rem;
+    h3 {
+      font-size: 2rem;
+      text-align: center;
+    }
+    #easter-egg {
+      text-align: center;
+      color: rgb(238, 135, 152);
+      font-size: 8rem;
+    }
   }
 }
 </style>

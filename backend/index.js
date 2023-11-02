@@ -39,21 +39,21 @@ app.put("/api/:id", async (request, response) => {
   const id = request.params.id;
   const { newName, newAge, newPoemtext, newDate } = request.body;
 
-  await client.query(
+  const result = await client.query(
     "UPDATE poems SET name = $1, age = $2, poemtext = $3, publishdate = $4 WHERE id = $5",
     [newName, newAge, newPoemtext, newDate, id]
   );
 
-  response.send({ message: "Poem updated successfully" });
+  response.send(result);
 });
 
 //Delete a poem (Password required)
 app.delete("/api/:id", async (request, response) => {
   const id = request.params.id;
 
-  await client.query("DELETE FROM poems WHERE id = $1", [id]);
+  const result = await client.query("DELETE FROM poems WHERE id = $1", [id]);
 
-  response.send({ message: "Data deleted successfully" });
+  response.send(result);
 });
 
 app.use(express.static(path.join(path.resolve(), "public")));

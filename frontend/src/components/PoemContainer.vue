@@ -6,6 +6,7 @@ export default {
   },
   data() {
     return {
+      fadeInToggle: true,
       poemsDb: null,
       name: "",
       editedPoemId: null,
@@ -18,10 +19,12 @@ export default {
   },
   methods: {
     fetchPoems() {
+      this.fadeInToggle = false;
       fetch("/api")
         .then((response) => response.json())
         .then((result) => {
           this.poemsDb = result;
+          this.fadeInToggle = true;
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -61,6 +64,10 @@ export default {
         alert("Felaktigt lösenord");
       }
     },
+    closeEditPoem(poemId) {
+      this.editPoemToggle[poemId] = false;
+      this.fetchPoems();
+    },
   },
 };
 </script>
@@ -68,26 +75,54 @@ export default {
 <template>
   <div id="poems-container">
     <h2>Mästerverk</h2>
-    <div class="poem-post" v-for="poem in poemsDb" :key="poem.id">
+    <div
+      class="poem-post"
+      :class="{ 'fade-in-animation': fadeInToggle }"
+      v-for="poem in poemsDb"
+      :key="poem.id"
+    >
       <div class="author-container">
         <h3>{{ poem.name }},</h3>
         <span>{{ poem.age }}</span>
+      </div>
+      <p class="poem-text">
+        {{ poem.poemtext }}
+      </p>
+      <div class="menu-bottom">
+        <p class="publish-date">{{ poem.publishdate }}</p>
         <div class="customize-post">
           <p class="edit" @click="editPoem(poem.id, poem.password)">Edit</p>
           <p class="edit" @click="removePoem(poem.id, poem.password)">Remove</p>
         </div>
       </div>
-      <p class="poem-text">
-        {{ poem.poemtext }}
-      </p>
-      <p class="publish-date">{{ poem.publishdate }}</p>
-      <EditPoem v-if="editPoemToggle[poem.id]" :key="poem.id" :poem="poem" />
+      <EditPoem
+        v-if="editPoemToggle[poem.id]"
+        :key="poem.id"
+        :poem="poem"
+        @edits-saved="closeEditPoem(poem.id)"
+      />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 @import "../style.scss";
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+
+.fade-in-animation {
+  animation: fadeIn 0.7s ease-in-out forwards;
+}
+
 #poems-container {
   width: 70%;
   margin: 0 auto;
@@ -99,9 +134,13 @@ export default {
     color: $headers;
   }
   .poem-post {
-    border: 1px solid #fff;
+    border-bottom: 1px solid #fff;
     padding: 10px 25px 0 25px;
     margin-top: 3rem;
+    .poem-text,
+    .publish-date {
+      font-style: italic;
+    }
     .author-container {
       display: flex;
       align-items: center;
@@ -109,12 +148,22 @@ export default {
       span {
         margin-top: 2px;
       }
+    }
+    .menu-bottom {
+      display: flex;
+      align-items: center;
+      margin-top: 2rem;
+      .publish-date {
+        margin-top: 2rem;
+        font-size: 13px;
+      }
       .customize-post {
         display: flex;
         gap: 10px;
         margin-left: auto;
         .edit {
-          font-size: 14px;
+          margin-top: 2rem;
+          font-size: 13px;
           @include transition(all 0.2s ease);
           &:last-child {
             color: #ff0000;
@@ -128,14 +177,6 @@ export default {
           }
         }
       }
-    }
-    .poem-text,
-    .publish-date {
-      font-style: italic;
-    }
-    .publish-date {
-      margin-top: 2rem;
-      font-size: 13px;
     }
   }
 }
