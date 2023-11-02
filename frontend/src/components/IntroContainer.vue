@@ -25,11 +25,11 @@ export default {
 @import "../style.scss";
 #intro-container {
   width: 70%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 30px 0;
   h1 {
     font-size: 4rem;
     margin-bottom: 2rem;

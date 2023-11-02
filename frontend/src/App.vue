@@ -31,7 +31,6 @@ export default {
 <style scoped lang="scss">
 @import "./style.scss";
 #container {
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,6 +43,6 @@ export default {
 .slide-fade-enter,
 .slide-fade-leave-to {
   opacity: 0;
-  transform: translateX(-20%);
+  transform: translateY(-20%);
 }
 </style>

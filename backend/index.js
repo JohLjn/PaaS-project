@@ -15,21 +15,45 @@ const client = new Client({
 
 client.connect();
 
+// Get all poems
 app.get("/api", async (_request, response) => {
   const { rows } = await client.query("SELECT * FROM poems");
 
   response.send(rows);
 });
 
+// Apply a poem
 app.post("/api", async (request, response) => {
-  const { name, age, password, poemtext } = request.body;
+  const { name, age, password, poemtext, publishdate } = request.body;
 
   const result = await client.query(
-    "INSERT INTO poems (name, age, password, poemtext) VALUES ($1, $2, $3, $4)",
-    [name, age, password, poemtext]
+    "INSERT INTO poems (name, age, password, poemtext, publishdate) VALUES ($1, $2, $3, $4, $5)",
+    [name, age, password, poemtext, publishdate]
   );
 
   response.send(result);
+});
+
+// Change a poem (Password required)
+app.put("/api/:id", async (request, response) => {
+  const id = request.params.id;
+  const { newName, newAge, newPoemtext, newDate } = request.body;
+
+  await client.query(
+    "UPDATE poems SET name = $1, age = $2, poemtext = $3, publishdate = $4 WHERE id = $5",
+    [newName, newAge, newPoemtext, newDate, id]
+  );
+
+  response.send({ message: "Poem updated successfully" });
+});
+
+//Delete a poem (Password required)
+app.delete("/api/:id", async (request, response) => {
+  const id = request.params.id;
+
+  await client.query("DELETE FROM poems WHERE id = $1", [id]);
+
+  response.send({ message: "Data deleted successfully" });
 });
 
 app.use(express.static(path.join(path.resolve(), "public")));

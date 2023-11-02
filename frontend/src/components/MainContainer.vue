@@ -10,10 +10,12 @@ export default {
       age: null,
       password: null,
       poemtext: null,
+      publishdate: null,
     };
   },
   methods: {
     applyPoem() {
+      this.publishdate = this.currentDate;
       fetch("/api", {
         method: "POST",
         headers: {
@@ -24,10 +26,23 @@ export default {
           age: this.age,
           password: this.password,
           poemtext: this.poemtext,
+          publishdate: this.publishdate,
         }),
       }).catch((error) => {
         console.error("Error:", error);
       });
+    },
+  },
+  computed: {
+    currentDate() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, "0");
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const year = now.getFullYear();
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const seconds = String(now.getSeconds()).padStart(2, "0");
+      return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
     },
   },
 };
@@ -48,7 +63,7 @@ export default {
         </div>
         <div class="align-info">
           <label for="password">Lösenord * (Du kommer förstå varför)</label>
-          <input v-model="password" type="text" id="password" />
+          <input v-model="password" type="password" id="password" />
         </div>
       </div>
       <textarea
@@ -64,9 +79,21 @@ export default {
 <style scoped lang="scss">
 @import "../style.scss";
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+
 .main-container {
   width: 70%;
-  margin-top: 10rem;
+  transform: translateY(10%);
+  animation: fadeIn 0.7s ease-in-out forwards;
   #form-container {
     display: flex;
     flex-direction: column;
