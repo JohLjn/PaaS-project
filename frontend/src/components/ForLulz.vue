@@ -208,8 +208,6 @@ export default {
     .two {
       color: #6b94c0;
     }
-    .three {
-    }
     .detta-kommer-ta-tid {
       display: flex;
       margin-left: 15%;
